@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+</head>
+<script>
+  init = ()=>{
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioContext = new AudioContext();
+    
+    // get the audio element
+    const audioElement = document.querySelector('audio');
+
+    //pass it to the audio context
+    const track = audioContext.createMediaElementSource(audioElement)
+
+    track.connect(audioContext.destination)
+
+    // select the pause button
+    const playButton = document.querySelector('button')
+
+    // play/pause button function 
+    playButton.addEventListener('click', function(){
+      // check if the audio context is suspended/track paused
+      if( audioContext.state === 'suspended'){
+        audioContext.resume()
+      }
+
+      // play or pause (depending on state)
+      if(this.dataset.playing === 'false'){
+        audioElement.play()
+        this.dataset.playing = 'true'
+      }else if(this.dataset.playing === 'true'){
+        audioElement.pause()
+        this.dataset.playing = 'false'
+      }
+
+
+    }, false)
+
+    // handler for end of track
+    audioElement.addEventListener('ended',()=>{
+      playButton.dataset.playing = 'false'
+    }, false)
+
+
+
+  }
+
+</script>
+<body onload="init()">
+  <h1>SOMETHING</h1>
+  <audio src="outfoxing.mp3" type="audio/mpeg" controls></audio>
+
+  <button data-playing="false" role="switch" aria-checked="false">
+    <span>Play/Pause</span>
+  </button>
+</body>
